@@ -1,0 +1,44 @@
+# Kubernetes deployment avec misconfigurations intentionnelles
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vulnerable-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vulnerable-app
+  template:
+    metadata:
+      labels:
+        app: vulnerable-app
+    spec:
+      containers:
+      - name: app
+        image: nginx:latest  # Tag "latest" = mauvaise pratique
+        ports:
+        - containerPort: 80
+        securityContext:
+          privileged: true           # Container privilégié !
+          runAsRoot: true            # Exécution en root
+          allowPrivilegeEscalation: true
+          readOnlyRootFilesystem: false
+        resources: {}                # Pas de limits/requests
+        # Pas de healthcheck
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: insecure-pod
+spec:
+  hostNetwork: true      # Accès au réseau de l'hôte
+  hostPID: true          # Accès aux PID de l'hôte
+  containers:
+  - name: shell
+    image: ubuntu
+    command: ["sleep", "infinity"]
+    securityContext:
+      capabilities:
+        add: ["SYS_ADMIN", "NET_ADMIN"]  # Capabilities dangereuses
