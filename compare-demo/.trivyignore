@@ -1,0 +1,7 @@
+# Vuln acceptée (justification obligatoire)
+# CVE-2021-3749: axios - pas exploitable (pas d’input utilisateur)
+CVE-2021-3749
+
+# Ignore temporaire jusqu’à mise à jour planifiée
+# exp:2026-03-01
+CVE-2024-12345
