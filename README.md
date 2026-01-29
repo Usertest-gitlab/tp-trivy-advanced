@@ -1,6 +1,6 @@
 # TP Trivy Avancé - SBOM, IaC et Comparaison d'outils
 
-Ce repo contient des exemples de misconfigurations IaC intentionnelles pour tester Trivy.
+ Ce repo contient des exemples de misconfigurations IaC intentionnelles pour tester Trivy.
 
 ## Contenu
 
