@@ -1,0 +1,33 @@
+name: Security Scan (Trivy + Grype)
+on: [push, pull_request]
+
+permissions:
+   contents: read
+   security-events: write
+
+jobs:
+   scan:
+      runs-on: ubuntu-latest
+      steps:
+         - uses: actions/checkout@v4
+
+         - name: Trivy - Vulnerabilities
+            uses: aquasecurity/trivy-action@master
+            with:
+               scan-type: 'fs'
+               severity: 'HIGH,CRITICAL'
+               format: 'sarif'
+               output: 'trivy.sarif'
+
+         - name: Trivy - IaC
+            uses: aquasecurity/trivy-action@master
+            with:
+               scan-type: 'config'
+               scan-ref: '.'
+               severity: 'HIGH,CRITICAL'
+
+         - name: Grype
+            uses: anchore/scan-action@v3
+            with:
+               path: "."
+               fail-build: false
